@@ -83,7 +83,7 @@ let numQuestions = questions.length; // Jumlah pertanyaan
 let numCheckpoints = numQuestions
 let checkpoints = []; // Array untuk menyimpan checkpoint
 for (let i = 1; i <= numCheckpoints; i++) {
-    checkpoints.push(i * 500); // Setiap checkpoint berjarak 500
+    checkpoints.push(i * 200); // Setiap checkpoint berjarak 500
 }
 
 let currentCheckpointIndex = 0;
@@ -143,7 +143,7 @@ function showQuestionPopup() {
 
         if (answer !== null) { // Check apakah pengguna mengklik "Cancel"
             let selectedOption = parseInt(answer);
-            if (!isNaN(selectedOption) && selectedOption >= 1 && selectedOption <= 3) {
+            if (!isNaN(selectedOption) && selectedOption >= 1 && selectedOption <= 3 && answer !== null) {
                 // Validasi bahwa input adalah angka antara 1 dan 3
                 let previousScore = parseInt(localStorage.getItem("previousScore")) || 0;
                 if (selectedOption - 1 === question.correctAnswer) {
@@ -158,8 +158,14 @@ function showQuestionPopup() {
                 }
             } else {
                 // Input tidak valid, tampilkan pesan kesalahan
+                gameOver = true;
                 alert("Masukkan angka antara 1 dan 3 untuk memilih jawaban!");
+                resetGame();
             }
+        } else {
+            // Jika pengguna membatalkan popup, panggil fungsi resetGame()
+            gameOver = true;
+            resetGame();
         }
 
         currentQuestionIndex = questionIndex; // Perbarui indeks pertanyaan saat ini
@@ -179,6 +185,7 @@ function resetGame() {
         // Set skor menjadi 0 jika game over karena dinosaurus nabrak
         score = 0;
         localStorage.removeItem("previousScore");
+
         window.location.reload()
     } else {
         // Semua jawaban benar, lanjutkan permainan dengan skor sebelumnya ditambah 100
