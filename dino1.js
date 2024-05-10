@@ -1,3 +1,4 @@
+
 //board
 let board;
 let boardWidth = 750;
@@ -41,54 +42,6 @@ let gravity = .4;
 let gameOver = false;
 let score = 0;
 
-// Questions
-let questions = [
-    {
-        question: "Siapakah penemu JavaScript?",
-        options: ["Brendan Eich", "Tim Berners-Lee", "Larry Page"],
-        correctAnswer: 0
-    },
-    {
-        question: "Apa yang menjadi kepanjangan dari HTML?",
-        options: ["Hyper Text Markup Language", "Hyperlinks and Text Markup Language", "Home Tool Markup Language"],
-        correctAnswer: 0
-    },
-    {
-        question: "Apa yang menjadi kepanjangan dari SMECONE?",
-        options: ["SMAN 1 Purwokerto", "SMKN 1 Purwokerto", "Home Tool Markup Language"],
-        correctAnswer: 1
-    },
-    {
-        question: "jawabn ini 2?",
-        options: ["1", "2", "3"],
-        correctAnswer: 1
-    },
-    {
-        question: "jawabn ini 3?",
-        options: ["1", "2", "3"],
-        correctAnswer: 2
-    },
-    {
-        question: "jawabn ini 1?",
-        options: ["1", "2", "2"],
-        correctAnswer: 0
-    },
-    // correctAnswer itu adalah index dari jawabn yang benar
-];
-
-let currentQuestionIndex = 0;
-
-// Checkpoint
-let numQuestions = questions.length; // Jumlah pertanyaan
-let numCheckpoints = numQuestions
-let checkpoints = []; // Array untuk menyimpan checkpoint
-for (let i = 1; i <= numCheckpoints; i++) {
-    checkpoints.push(i * 500); // Setiap checkpoint berjarak 500
-}
-
-let currentCheckpointIndex = 0;
-let questionsShown = 0;
-
 window.onload = function () {
     board = document.getElementById("board");
     board.height = boardHeight;
@@ -123,6 +76,7 @@ window.onload = function () {
     document.addEventListener("keydown", moveDino);
 }
 
+
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -130,85 +84,90 @@ function shuffleArray(array) {
     }
 }
 
+let questions = [
+    {
+        question: "Siapakah penemu JavaScript?",
+        options: ["Brendan Eich", "Tim Berners-Lee", "Larry Page"],
+        correctAnswer: 0
+    },
+    {
+        question: "Apa yang menjadi kepanjangan dari HTML?",
+        options: ["Hyper Text Markup Language", "Hyperlinks and Text Markup Language", "Home Tool Markup Language"],
+        correctAnswer: 0
+    },
+    {
+        question: "Apa yang menjadi kepanjangan dari SMECONE?",
+        options: ["SMAN 1 Purwokerto", "SMKN 1 Purwokerto", "Home Tool Markup Language"],
+        correctAnswer: 1
+    },
+    // Tambahkan pertanyaan lain di sini sesuai kebutuhan
+];
+
+let currentQuestionIndex = 0;
+
 function showQuestionPopup() {
-    if (questionsShown === 0) { // Hanya munculkan pertanyaan jika belum ada yang ditampilkan pada checkpoint ini
-        let questionIndex = currentQuestionIndex;
-        do {
-            // Random pertanyaan baru yang belum pernah ditampilkan
-            questionIndex = Math.floor(Math.random() * questions.length);
-        } while (questionIndex === currentQuestionIndex); // Pastikan pertanyaan baru tidak sama dengan yang sebelumnya
+    let question = questions[currentQuestionIndex];
+    let answer = prompt(`${question.question}\n\nPilih jawaban:\n1. ${question.options[0]}\n2. ${question.options[1]}\n3. ${question.options[2]}`);
 
-        let question = questions[questionIndex];
-        let answer = prompt(`${question.question}\n\nPilih jawaban:\n1. ${question.options[0]}\n2. ${question.options[1]}\n3. ${question.options[2]}`);
-
-        if (answer !== null) { // Check apakah pengguna mengklik "Cancel"
-            let selectedOption = parseInt(answer);
-            if (!isNaN(selectedOption) && selectedOption >= 1 && selectedOption <= 3) {
-                // Validasi bahwa input adalah angka antara 1 dan 3
-                let previousScore = parseInt(localStorage.getItem("previousScore")) || 0;
-                if (selectedOption - 1 === question.correctAnswer) {
-                    // Jawaban benar, tambahkan skor sebelumnya dengan 10
-                    gameOver = false;
-                    localStorage.setItem("previousScore", score);
-                    score = previousScore + 10;
+    if (answer !== null) { // Check apakah pengguna mengklik "Cancel"
+        let selectedOption = parseInt(answer);
+        if (!isNaN(selectedOption) && selectedOption >= 1 && selectedOption <= 3) {
+            // Validasi bahwa input adalah angka antara 1 dan 3
+            if (selectedOption - 1 === question.correctAnswer) {
+                // Jawaban benar
+                if (currentQuestionIndex < questions.length - 1) {
+                    currentQuestionIndex++; // Pindah ke pertanyaan berikutnya
+                    showQuestionPopup(); // Tampilkan pertanyaan berikutnya
                 } else {
-                    // Jawaban salah, tidak perlu melakukan apa pun pada skor
-                    gameOver = true;
-                    resetGame();
+                    // Semua jawaban benar, lanjutkan permainan dengan skor sebelumnya ditambah 100
+                    let previousScore = parseInt(localStorage.getItem("previousScore")) || 0;
+                    score = previousScore + 100;
+                    localStorage.setItem("previousScore", score);
+                    gameOver = false;
+                    resetGame()
                 }
             } else {
-                // Input tidak valid, tampilkan pesan kesalahan
-                alert("Masukkan angka antara 1 dan 3 untuk memilih jawaban!");
+                // Jawaban salah, kembali ke awal
+                gameOver = true;
+                resetGame();
             }
+        } else {
+            // Input tidak valid, tampilkan pesan kesalahan
+            alert("Masukkan angka antara 1 dan 3 untuk memilih jawaban!");
         }
-
-        currentQuestionIndex = questionIndex; // Perbarui indeks pertanyaan saat ini
-        questionsShown = 1; // Set jumlah pertanyaan yang ditampilkan menjadi 1
     }
 }
 
 function resetGame() {
     // Kode untuk mengatur ulang variabel permainan
     if (gameOver) {
-        // Reset posisi karakter ke posisi awal
-        dino.y = dinoY;
-
-        // Hapus semua kaktus dari array
-        cactusArray = [];
-
-        // Set skor menjadi 0 jika game over karena dinosaurus nabrak
-        score = 0;
         localStorage.removeItem("previousScore");
-        window.location.reload()
+        score = 0; // Mulai skor dari 0 jika game over karena jawaban salah
     } else {
         // Semua jawaban benar, lanjutkan permainan dengan skor sebelumnya ditambah 100
         let previousScore = parseInt(localStorage.getItem("previousScore")) || 0;
-        score = previousScore + 10; // Menambah skor sebelumnya dengan 10
+        score = previousScore + 100;
         localStorage.setItem("previousScore", score);
     }
 
     currentQuestionIndex = 0;
+    dino.y = dinoY; // Reset posisi karakter ke posisi awal
+
+    // Hapus semua kaktus dari array
+    cactusArray = [];
+
     gameOver = false;
 }
 
-// Memodifikasi fungsi update untuk menampilkan pertanyaan saat dinosaurus mencapai checkpoint
-// Memodifikasi fungsi update untuk menangani deteksi tabrakan antara dino dan kaktus
+
+
+// Memodifikasi fungsi update untuk menampilkan pertanyaan saat dinosaurus menabrak kaktus
 function update() {
     requestAnimationFrame(update);
     if (gameOver) {
         return;
     }
     context.clearRect(0, 0, board.width, board.height);
-
-    // Periksa jika mencapai checkpoint
-    if (score >= checkpoints[currentCheckpointIndex]) {
-        showQuestionPopup();
-        currentCheckpointIndex++; // Pindah ke checkpoint berikutnya
-        questionsShown = 0; // Reset jumlah pertanyaan yang ditampilkan
-    }
-
-    // Dapatkan skor dari localStorage sebagai skor awal
-    let previousScore = parseInt(localStorage.getItem("previousScore")) || 0;
 
     //dino
     velocityY += gravity;
@@ -221,22 +180,17 @@ function update() {
         cactus.x += velocityX;
         context.drawImage(cactus.img, cactus.x, cactus.y, cactus.width, cactus.height);
 
-        // Deteksi tabrakan antara dino dan kaktus
         if (detectCollision(dino, cactus)) {
-            // Jika terjadi tabrakan, panggil fungsi resetGame()
-            score = 0; // Set score menjadi 0 saat menabrak
-            localStorage.setItem('previousScore', score);
-            gameOver = true;
-            resetGame();
+            // Tampilkan popup pertanyaan
+            showQuestionPopup();
         }
     }
 
     //score
     context.fillStyle = "black";
     context.font = "20px courier";
+    score++;
     context.fillText(score, 5, 20);
-
-    localStorage.setItem('previousScore', score++);
 }
 
 function moveDino(e) {
@@ -296,6 +250,11 @@ function detectCollision(a, b) {
         a.x + a.width > b.x &&   //a's top right corner passes b's top left corner
         a.y < b.y + b.height &&  //a's top left corner doesn't reach b's bottom left corner
         a.y + a.height > b.y;    //a's bottom left corner passes b's top left corner
+
+    if (collision) {
+        // Jika terjadi tabrakan, acak urutan pertanyaan
+        shuffleArray(questions);
+    }
 
     return collision;
 }
