@@ -83,7 +83,7 @@ let numQuestions = questions.length; // Jumlah pertanyaan
 let numCheckpoints = numQuestions
 let checkpoints = []; // Array untuk menyimpan checkpoint
 for (let i = 1; i <= numCheckpoints; i++) {
-    checkpoints.push(i * 200); // Setiap checkpoint berjarak 500
+    checkpoints.push(i * 500); // Setiap checkpoint berjarak 500
 }
 
 let currentCheckpointIndex = 0;
