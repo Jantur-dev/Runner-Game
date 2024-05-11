@@ -44,36 +44,36 @@ let score = 0;
 // Questions
 let questions = [
     {
-        question: "Siapakah penemu JavaScript?",
-        options: ["Brendan Eich", "Tim Berners-Lee", "Larry Page"],
+        question: "Apa yang dimaksud dengan P5?",
+        options: ["Program Pembelajaran Penalaran, Pemecahan Masalah, dan Penciptaan Solusi", "Pendidikan, Pengajaran, dan Pembelajaran", "Pintar, Pandai, dan Percaya Diri"],
         correctAnswer: 0
     },
     {
-        question: "Apa yang menjadi kepanjangan dari HTML?",
-        options: ["Hyper Text Markup Language", "Hyperlinks and Text Markup Language", "Home Tool Markup Language"],
-        correctAnswer: 0
-    },
-    {
-        question: "Apa yang menjadi kepanjangan dari SMECONE?",
-        options: ["SMAN 1 Purwokerto", "SMKN 1 Purwokerto", "Home Tool Markup Language"],
+        question: "Siapa yang mengembangkan konsep P5?",
+        options: ["Kementerian Pendidikan dan Kebudayaan", "Badan Pengembangan Kurikulum", "Tim Kurikulum"],
         correctAnswer: 1
     },
     {
-        question: "jawabn ini 2?",
-        options: ["1", "2", "3"],
+        question: "Apa tujuan utama dari P5?",
+        options: ["Mengembangkan keterampilan teknis siswa", "Mengembangkan kompetensi dan karakter siswa", "Meningkatkan penggunaan teknologi dalam pembelajaran"],
         correctAnswer: 1
     },
     {
-        question: "jawabn ini 3?",
-        options: ["1", "2", "3"],
+        question: "Bagaimana P5 mempengaruhi proses pembelajaran?",
+        options: ["Mempercepat proses pembelajaran", "Memberikan ruang dan waktu bagi siswa untuk mengembangkan kompetensi dan memperkuat karakter", "Mengurangi intensitas pembelajaran"],
+        correctAnswer: 1
+    },
+    {
+        question: "Apa yang menjadi fokus utama dalam P5?",
+        options: ["Meningkatkan daya ingat siswa", "Mengembangkan keterampilan sosial siswa", "Mengembangkan kemampuan penalaran, pemecahan masalah, dan penciptaan solusi"],
         correctAnswer: 2
     },
     {
-        question: "jawabn ini 1?",
-        options: ["1", "2", "2"],
-        correctAnswer: 0
-    },
-    // correctAnswer itu adalah index dari jawabn yang benar
+        question: "Bagaimana evaluasi dilakukan dalam P5?",
+        options: ["Melalui ujian akhir semester", "Melalui penilaian berkelanjutan dan portofolio siswa", "Tidak ada evaluasi dalam P5"],
+        correctAnswer: 1
+    }
+    // correctAnswer adalah indeks dari jawaban yang benar
 ];
 
 let currentQuestionIndex = 0;
