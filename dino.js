@@ -121,6 +121,7 @@ window.onload = function () {
     requestAnimationFrame(update);
     setInterval(placeCactus, 1000); //1000 milliseconds = 1 second
     document.addEventListener("keydown", moveDino);
+    document.addEventListener("click", moveDino);
 }
 
 function shuffleArray(array) {
@@ -251,7 +252,7 @@ function moveDino(e) {
         return;
     }
 
-    if ((e.code == "Space" || e.code == "ArrowUp") && dino.y == dinoY) {
+    if ((e.code == "Space" || e.code == "ArrowUp" || e.type == "click") && dino.y == dinoY) {
         //jump
         velocityY = -10;
     }

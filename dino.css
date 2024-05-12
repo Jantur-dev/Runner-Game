@@ -3,7 +3,28 @@ body {
     text-align: center;
 }
 
+
 #board {
     background-color: lightgray;
     border-bottom: 1px solid black;
+    /* lebar relatif */
+    width: 80%;
+    max-width: 700px;
+    /* lebar maksimum */
+    margin: 0 auto;
+    /* tegah secara horizontal */
+}
+
+/* layar berukuran kecil */
+@media screen and (max-width: 600px) {
+    #board {
+        width: 90%;
+    }
+}
+
+/* perangkat mobile */
+@media screen and (max-width: 400px) {
+    #board {
+        width: 95%;
+    }
 }
