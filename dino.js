@@ -89,6 +89,25 @@ for (let i = 1; i <= numCheckpoints; i++) {
 let currentCheckpointIndex = 0;
 let questionsShown = 0;
 
+function startGame() {
+    // Inisialisasi variabel permainan
+    gameOver = false;
+    score = 0;
+
+    // Menghilangkan tombol "Mulai Permainan"
+    document.getElementById("start-button").style.display = "none";
+
+    // Mulai permainan
+    document.removeEventListener("click", startGame);
+    document.addEventListener("click", moveDino);
+    document.addEventListener("keydown", moveDino);
+    requestAnimationFrame(update);
+    setInterval(placeCactus, 1000); //1000 milliseconds = 1 second
+}
+
+// Tambahkan event listener pada elemen HTML dengan id start-button
+document.getElementById("start-button").addEventListener("click", startGame);
+
 window.onload = function () {
     board = document.getElementById("board");
     board.height = boardHeight;
@@ -118,10 +137,10 @@ window.onload = function () {
     cactus3Img = new Image();
     cactus3Img.src = "./img/cactus3.png";
 
-    requestAnimationFrame(update);
-    setInterval(placeCactus, 1000); //1000 milliseconds = 1 second
-    document.addEventListener("keydown", moveDino);
-    document.addEventListener("click", moveDino);
+    // requestAnimationFrame(update);
+    // setInterval(placeCactus, 1000); //1000 milliseconds = 1 second
+    // document.addEventListener("keydown", moveDino);
+    // document.addEventListener("click", moveDino);
 }
 
 function shuffleArray(array) {
@@ -174,29 +193,60 @@ function showQuestionPopup() {
     }
 }
 
+function handleGameOverClick(e) {
+    gameOver = false;
+    window.location.reload();
+}
+
 function resetGame() {
     // Kode untuk mengatur ulang variabel permainan
     if (gameOver) {
+
         // Reset posisi karakter ke posisi awal
         dino.y = dinoY;
 
         // Hapus semua kaktus dari array
         cactusArray = [];
 
-        // Set skor menjadi 0 jika game over karena dinosaurus nabrak
-        score = 0;
+        // Set skor menjadi yang sebelumnya jika game over karena dinosaurus nabrak
+        score = parseInt(localStorage.getItem("previousScore")) || 0;
         localStorage.removeItem("previousScore");
 
-        window.location.reload()
+        // Show game over message
+        showGameOverMessage();
     } else {
         // Semua jawaban benar, lanjutkan permainan dengan skor sebelumnya ditambah 100
         let previousScore = parseInt(localStorage.getItem("previousScore")) || 0;
         score = previousScore + 10; // Menambah skor sebelumnya dengan 10
         localStorage.setItem("previousScore", score);
     }
-
+    document.addEventListener("click", handleGameOverClick);
     currentQuestionIndex = 0;
-    gameOver = false;
+}
+
+function showGameOverMessage() {
+    context.fillStyle = "rgba(0, 0, 0, 0.5)";
+    context.fillRect(0, 0, boardWidth, boardHeight);
+
+    context.fillStyle = "white";
+    context.font = "60px courier";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText("Game Over", boardWidth / 2, boardHeight / 2);
+
+    context.font = "20px courier";
+    context.fillText(`Last Score: ${score}`, boardWidth / 2, boardHeight / 2 + 50);
+}
+
+function showStartGameMessage() {
+    context.fillStyle = "rgba(0, 0, 0, 0.5)";
+    context.fillRect(0, 0, boardWidth, boardHeight);
+
+    context.fillStyle = "white";
+    context.font = "60px courier";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText("Start Game", boardWidth / 2, boardHeight / 2);
 }
 
 // Memodifikasi fungsi update untuk menampilkan pertanyaan saat dinosaurus mencapai checkpoint
@@ -204,6 +254,7 @@ function resetGame() {
 function update() {
     requestAnimationFrame(update);
     if (gameOver) {
+        showGameOverMessage();
         return;
     }
     context.clearRect(0, 0, board.width, board.height);
@@ -232,7 +283,6 @@ function update() {
         // Deteksi tabrakan antara dino dan kaktus
         if (detectCollision(dino, cactus)) {
             // Jika terjadi tabrakan, panggil fungsi resetGame()
-            score = 0; // Set score menjadi 0 saat menabrak
             localStorage.setItem('previousScore', score);
             gameOver = true;
             resetGame();
@@ -244,7 +294,9 @@ function update() {
     context.font = "20px courier";
     context.fillText(score, 5, 20);
 
-    localStorage.setItem('previousScore', score++);
+    localStorage.setItem('previousScore', score);
+    score++;
+    console.log(score);
 }
 
 function moveDino(e) {
