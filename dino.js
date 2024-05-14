@@ -51,7 +51,7 @@ let questions = [
     {
         question: "Siapa yang mengembangkan konsep P5?",
         options: ["Kementerian Pendidikan dan Kebudayaan", "Badan Pengembangan Kurikulum", "Tim Kurikulum"],
-        correctAnswer: 1
+        correctAnswer: 0
     },
     {
         question: "Apa tujuan utama dari P5?",
